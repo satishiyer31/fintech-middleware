@@ -10,7 +10,7 @@ const auth = new google.auth.GoogleAuth({
 
 const spreadsheetId = SPREADSHEET_ID
 
-accounts.get('/', async(req,res)=> {
+accounts.get('/:email', async(req,res)=> {
 
     const client = await auth.getClient();
 
@@ -23,8 +23,18 @@ accounts.get('/', async(req,res)=> {
         spreadsheetId,
         range: "Accounts",
       });
-      console.log(getRows.data.values[1][1])
-      res.json(getRows.data.values);
+      const rows = getRows.data.values;
+      const filteredRows =[];
+      for (const row of rows) {
+        if ((row[0]) == req.params.email) {
+            filteredRows.push(row)
+        }
+    }
+
+    res.json(filteredRows);
+
+    //   console.log(getRows.data.values[1][1])
+    //   res.json(getRows.data.values);
 
 
 })
